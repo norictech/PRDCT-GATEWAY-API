@@ -11,6 +11,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use GuzzleHttp\Client as Guzzle;
+use App\Helpers\Globals as GlobalHelper;
 
 class RegisterController extends Controller
 {
@@ -58,7 +59,7 @@ class RegisterController extends Controller
             'unique_id' => ['required'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8'],
         ]);
     }
 
@@ -80,22 +81,25 @@ class RegisterController extends Controller
 
     public function register(Request $request) {
         $request['unique_id'] = \Hash::make(md5(time()));
-        $this->validator($request->all())->validate();
+        $validator = $this->validator($request->all());
+
+        if (empty($validator->messages()->toArray())) $validator->validate();
+        else return GlobalHelper::api_response(true, $validator->messages(), 417);
 
         event(new Registered($user = $this->create($request->all())));
         $user_registered = $user->save($request->all());
 
         if ($user_registered) {
-            $this->guard()->login($user);
-
             $party_app = json_decode(\App\Helpers\Parties::all());
             foreach ($party_app as $key => $party) {
                 $response[$party->app_url] = $this->client->request('POST', $party->app_url . 'register', [
                     'form_params' => $request->toArray()
                 ]);
             }
-        }
 
-        return $this->registered($request, $user) ?: redirect($this->redirectPath());
+            return GlobalHelper::api_response(true, 'Successfully registered!', 200);
+        } else {
+            return GlobalHelper::api_response(false, 'Something went wrong, please try again later!', 417);
+        }
     }
 }
