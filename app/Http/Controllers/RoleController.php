@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Role;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\RoleResource;
+use Symfony\Component\HttpFoundation\Response;
 
-class UserController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::paginate(10));
+        return RoleResource::collection(Role::paginate(10));
     }
 
     /**
@@ -25,7 +26,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -47,7 +48,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return new UserResource(User::find($id));
+        return new RoleResource(Role::find($id));
     }
 
     /**

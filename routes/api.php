@@ -22,5 +22,6 @@ Route::group(['prefix' => 'user'], function () {
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::resource('role', 'RoleController');
     Route::resource('user', 'UserController');
 });
