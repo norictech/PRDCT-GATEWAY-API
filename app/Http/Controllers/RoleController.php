@@ -31,9 +31,9 @@ class RoleController extends Controller
         $role = Role::create($request->all());
         $role->save();
 
-        return response()->json([
-            'data' => new RoleResource(Role::find($role->id))
-        ], Response::HTTP_OK);
+        $stored_role = Role::find($role->id);
+
+        return response()->json(new RoleResource($stored_role), Response::HTTP_OK);
     }
 
     /**
@@ -56,10 +56,12 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $role = Role::find($id)->update($request->all());
-        return response()->json([
-            'data' => new RoleResource(Role::find($id))
-        ], Response::HTTP_OK);
+        $data = $request->all();
+        $role = Role::find($id)->update($data);
+
+        $updated_role = Role::find($id);
+
+        return response()->json(new RoleResource($updated_role), Response::HTTP_OK);
     }
 
     /**
@@ -76,14 +78,11 @@ class RoleController extends Controller
 
     public function mass_destroy(Request $request) {
         Role::whereIn('id', $request->all())->delete();
-
         return response()->json($request->all(), Response::HTTP_OK);
     }
 
     public function members($id) {
         $members = User::where('role_id', $id)->get();
-        return response()->json([
-            'data' => $members
-        ], Response::HTTP_OK);
+        return response()->json($members, Response::HTTP_OK);
     }
 }
