@@ -21,16 +21,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -42,9 +32,9 @@ class UserController extends Controller
         $user = User::create($request->all());
         $user->save();
 
-        return response()->json([
-            'data' => new UserResource(User::find($user->id))
-        ], Response::HTTP_OK);
+        $stored_user = User::find($user->id);
+
+        return response()->json(new UserResource($stored_user), Response::HTTP_OK);
     }
 
     /**
@@ -67,11 +57,12 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
+        $data = $request->all();
+        $user = User::find($id)->update($data);
 
-        return response()->json([
-            'data' => new UserResource($user)
-        ], Response::HTTP_OK);
+        $updated_user = User::find($id);
+
+        return response()->json(new UserResource($updated_user), Response::HTTP_OK);
     }
 
     /**
@@ -83,8 +74,6 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::destroy($id);
-        return response()->json([
-            'data' => new UserResource($user)
-        ], Response::HTTP_OK);
+        return response()->json(new UserResource($user), Response::HTTP_OK);
     }
 }
