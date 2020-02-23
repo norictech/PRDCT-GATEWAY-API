@@ -15,12 +15,13 @@ class RoleResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'name' => $this->role_name,
             'status' => $this->status ? 'Active' : 'Inactive',
             'description' => $this->description,
             'timestamps' => [
-                'created_at' => $this->created_at,
-                'update_at' => $this->updated_at
+                'created_at' => $this->created_at->format('D, d/m/Y H:i:s'),
+                'updated_at' => $this->updated_at->format('D, d/m/Y H:i:s')
             ],
         ];
     }

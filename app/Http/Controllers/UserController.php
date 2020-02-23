@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
+use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -36,7 +38,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request['unique_id'] = \Hash::make(Carbon::now());
+        $user = User::create($request->all());
+        $user->save();
+
+        return response()->json([
+            'data' => new UserResource(User::find($user->id))
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -51,17 +59,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -70,7 +67,11 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+
+        return response()->json([
+            'data' => new UserResource($user)
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -81,6 +82,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::destroy($id);
+        return response()->json([
+            'data' => new UserResource($user)
+        ], Response::HTTP_OK);
     }
 }
