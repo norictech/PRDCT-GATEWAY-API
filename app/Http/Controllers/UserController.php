@@ -17,7 +17,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::paginate(10));
+        $default_pagination_number = \App\Helpers\Globals::get_option_value('paginate');
+        return UserResource::collection(User::paginate($default_pagination_number));
     }
 
     /**
