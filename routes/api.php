@@ -18,14 +18,19 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'user'], function () {
-    Route::post('register', 'Auth\RegisterController@register')->name('api.user.register');
+    Route::post('register', 'Auth\RegisterController@register')->name('user.register');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::resource('user', 'UserController');
+    Route::group(['prefix' => 'user'], function () {
+        Route::post('advanced', 'UserController@advanced')->name('user.index.advanced');
+        Route::post('mass_destroy', 'UserController@mass_destroy')->name('user.destroy.mass');
+    });
+
     Route::resource('role', 'RoleController');
     Route::group(['prefix' => 'role'], function () {
-        Route::post('mass_destroy', 'RoleController@mass_destroy')->name('api.role.destroy.mass');
-        Route::get('{id}/members', 'RoleController@members')->name('api.role.members');
+        Route::post('mass_destroy', 'RoleController@mass_destroy')->name('role.destroy.mass');
+        Route::get('{id}/members', 'RoleController@members')->name('role.members');
     });
-    Route::resource('user', 'UserController');
 });

@@ -17,8 +17,26 @@ class UserController extends Controller
      */
     public function index()
     {
-        $default_pagination_number = \App\Helpers\Globals::get_option_value('paginate');
-        return UserResource::collection(User::paginate($default_pagination_number));
+        return UserResource::collection(User::paginate($this->default_pagination_number));
+    }
+
+    public function advanced(Request $request) {
+        $users = new User;
+        foreach ($request->all() as $mode => $value) {
+            if ($mode == 'equal') {
+                foreach ($value as $key => $keyword) {
+                    $users = $users->where($key, $keyword);
+                }
+            }
+            if ($mode == 'contain') {
+                foreach ($value as $key => $keyword) {
+                    $users = $users->where($key, 'like', '%'.$keyword.'%');
+                }
+            }
+        }
+        $users = $users->get();
+
+        return UserResource::collection($users);
     }
 
     /**
@@ -35,7 +53,7 @@ class UserController extends Controller
 
         $stored_user = User::find($user->id);
 
-        return response()->json(new UserResource($stored_user), Response::HTTP_OK);
+        return response()->json(new UserResource($stored_user), Response::HTTP_CREATED);
     }
 
     /**

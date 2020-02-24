@@ -17,7 +17,14 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return RoleResource::collection(Role::paginate(10));
+        return RoleResource::collection(Role::paginate($this->default_pagination_number));
+    }
+
+    public function advanced(Request $request) {
+        $users = new User;
+        dd($request->all());
+
+        // return RoleResource::collection($users);
     }
 
     /**
