@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Role;
+use App\Supports\DataViewer;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -10,25 +11,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, DataViewer;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'unique_id', 'name', 'email', 'password', 'role_id'
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'unique_id', 'password', 'remember_token',
-    ];
+    protected $fillable = ['unique_id', 'name', 'email', 'password', 'role_id'];
+    protected $hidden = ['unique_id', 'password', 'remember_token'];
+    protected $allowed_filters = ['name', 'email'];
+    protected $orderable = ['name', 'email', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be cast to native types.

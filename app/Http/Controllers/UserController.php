@@ -21,22 +21,7 @@ class UserController extends Controller
     }
 
     public function advanced(Request $request) {
-        $users = new User;
-        foreach ($request->all() as $mode => $value) {
-            if ($mode == 'equal') {
-                foreach ($value as $key => $keyword) {
-                    $users = $users->where($key, $keyword);
-                }
-            }
-            if ($mode == 'contain') {
-                foreach ($value as $key => $keyword) {
-                    $users = $users->where($key, 'like', '%'.$keyword.'%');
-                }
-            }
-        }
-        $users = $users->get();
-
-        return UserResource::collection($users);
+        return UserResource::collection(User::advanced_filter());
     }
 
     /**
