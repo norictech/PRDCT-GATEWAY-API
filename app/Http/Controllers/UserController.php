@@ -15,9 +15,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return UserResource::collection(User::paginate($this->default_pagination_number));
+        return UserResource::collection(User::advanced_filter());
     }
 
     public function advanced(Request $request) {

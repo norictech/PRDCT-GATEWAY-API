@@ -24,6 +24,7 @@ Route::group(['prefix' => 'user'], function () {
 Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('user', 'UserController');
     Route::group(['prefix' => 'user'], function () {
+        Route::post('/', 'UserController@index')->name('user.index');
         Route::post('advanced', 'UserController@advanced')->name('user.index.advanced');
         Route::post('mass_destroy', 'UserController@mass_destroy')->name('user.destroy.mass');
     });

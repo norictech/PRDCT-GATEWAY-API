@@ -34,15 +34,15 @@
         }
     },
     "autoload": {
-        "files": [
-            "app/Helpers/Globals.php"
-        ],
         "psr-4": {
             "App\\": "app/"
         },
         "classmap": [
             "database/seeds",
             "database/factories"
+        ],
+        "files": [
+            "app/Helpers/Globals.php"
         ]
     },
     "autoload-dev": {

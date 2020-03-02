@@ -2,16 +2,16 @@
 
 namespace App\Supports;
 
-use App\Helpers\Globals;
-
 trait DataViewer {
 
     public function scopeAdvanced_filter($query) {
-        return $this->process($query, request()->all())
-                    ->paginate(request('limit', Globals::get_option_value('paginate')));
+        return $this->process($query, request()->all());
     }
 
     public function process($query, $request) {
+        $order = false;
+        $paginate = false;
+
         foreach ($request as $key => $value) {
             if ($value['mode'] == 'search_any')
                 $this->search_any($query, $value['value']);
@@ -23,9 +23,20 @@ trait DataViewer {
                 $query = $query->where($value['key'], '<=', $value['value']);
             if ($value['mode'] == 'morethan')
                 $query = $query->where($value['key'], '>=', $value['value']);
-            if ($value['mode'] == 'order')
+            if ($value['mode'] == 'order') {
                 $this->order($query, $value);
+                $order = true;
+            }
+            if ($value['mode'] == 'limit') {
+                $this->paginate($query, $value);
+                $paginate = true;
+            }
         }
+
+        if (!$order)
+            $query = $query->orderBy('id', 'desc');
+        if (!$paginate)
+            $query = $query->paginate(get_option_value('paginate'));
 
         return $query;
     }
@@ -41,8 +52,13 @@ trait DataViewer {
     }
 
     public function order($query, $value) {
-        dd($value);
         $query = $query->orderBy($value['key'], $value['value']);
+
+        // return $query;
+    }
+
+    public function paginate($query, $value) {
+        $query = $query->paginate($value['value']);
 
         return $query;
     }
