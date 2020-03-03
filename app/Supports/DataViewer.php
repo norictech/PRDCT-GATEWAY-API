@@ -28,7 +28,7 @@ trait DataViewer {
                 $order = true;
             }
             if ($value['mode'] == 'limit') {
-                $this->paginate($query, $value);
+                $query = $query->paginate($value['value']);
                 $paginate = true;
             }
         }
@@ -53,12 +53,6 @@ trait DataViewer {
 
     public function order($query, $value) {
         $query = $query->orderBy($value['key'], $value['value']);
-
-        // return $query;
-    }
-
-    public function paginate($query, $value) {
-        $query = $query->paginate($value['value']);
 
         return $query;
     }

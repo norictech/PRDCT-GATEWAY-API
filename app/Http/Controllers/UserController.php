@@ -78,6 +78,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::destroy($id);
-        return response()->json(new UserResource($user), Response::HTTP_OK);
+        return response()->json($id, Response::HTTP_OK);
+    }
+
+    public function mass_destroy(Request $request)
+    {
+        User::whereIn('id', $request->all())->delete();
+        return response()->json($request->all(), Response::HTTP_OK);
     }
 }

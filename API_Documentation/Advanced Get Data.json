@@ -1,0 +1,18 @@
+[
+    {
+        "mode": "", // mode: equal, contain
+        "key": "name", // column,
+        "value": "" // search keyword
+    },
+    // order
+    {
+        "mode": "order",
+        "key": "name", // column
+        "value": "desc" // asc or desc
+    },
+    // limit
+    {
+        "mode": "limit",
+        "value": "10",
+    }
+]

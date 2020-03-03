@@ -1,0 +1,64 @@
+Project Name: GATEWAY API
+Start Date : 31/02/2020
+Finish Target : 15/03/2020
+
+<<================================================================================
+
+Headline:
+1. Authentication
+2. Tokenization
+3. User
+4. Role
+5. Role Access
+6. Group
+7. Application
+
+<<================================================================================
+
+Single Status:
+
+1. Authentication
+    - Login (done)
+    - Register (done)
+    - Update (hold)
+    - Forgot Password (hold)
+
+2. Tokenization
+    - Get Token
+    - Refresh Existing Token
+
+3. User
+    - All (done)
+    - Advanced (done)
+    - ByID (done)
+    - Create (done)
+    - Update (done)
+    - Delete (done)
+    - Mass Delete (done)
+
+4. Role
+    - All (done)
+    - Advanced (done)
+    - ByID (done)
+    - Create (done)
+    - Update (done)
+    - Delete (done)
+    - Mass Delete (done)
+    - Role has Users (done)
+    - Role has Accesses ()
+
+5. Role Access
+    - All (done)
+    - Advanced (done)
+    - ByID (done)
+    - Create (done)
+    - Delete [delete by role_id] (done)
+    - Mass Delete [delete by role_id] (done)
+    - Access has Roles
+    - Access has Users
+
+<<================================================================================
+
+Custom Condition :
+
+- Link user to institutions
