@@ -13,6 +13,9 @@ Headline:
 6. Group
 7. Application
 
+Flow :
+Group -> Application -> User -> Role -> Role Access -> Authentication -> Token
+
 <<================================================================================
 
 Single Status:
@@ -54,8 +57,16 @@ Single Status:
     - Create (done)
     - Delete [delete by role_id] (done)
     - Mass Delete [delete by role_id] (done)
-    - Access has Roles
-    - Access has Users
+
+6. Group
+    - All
+    - Advanced
+    - ByID
+    - Create
+    - Delete
+
+7. Application
+    - All
 
 <<================================================================================
 

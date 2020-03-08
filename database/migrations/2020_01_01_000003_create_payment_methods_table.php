@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartiesTable extends Migration
+class CreatePaymentMethodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreatePartiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('parties', function (Blueprint $table) {
+        Schema::create('payment_methods', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('app_name');
-            $table->string('app_url');
-            $table->text('app_description')->nullable();
+            $table->string('method');
+            $table->enum('is_active', [0, 1])->default('1');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreatePartiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('parties');
+        Schema::dropIfExists('payment_methods');
     }
 }

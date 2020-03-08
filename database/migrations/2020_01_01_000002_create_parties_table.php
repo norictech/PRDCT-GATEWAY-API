@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInstitutionsTable extends Migration
+class CreatePartiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateInstitutionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('institutions', function (Blueprint $table) {
+        Schema::create('parties', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('institution_parent_id')->nullable();
             $table->string('name');
-            $table->string('prefix');
+            $table->string('url');
             $table->text('description')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -29,8 +29,6 @@ class CreateInstitutionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('institutions', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('parties');
     }
 }
