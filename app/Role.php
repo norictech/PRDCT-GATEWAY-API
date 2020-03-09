@@ -11,7 +11,7 @@ class Role extends Model
     use DataViewer;
 
     protected $fillable = [
-        'role_name', 'status', 'description'
+        'role_name', 'is_active', 'description'
     ];
 
     public function users() {

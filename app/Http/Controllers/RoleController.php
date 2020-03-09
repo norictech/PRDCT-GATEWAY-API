@@ -20,12 +20,6 @@ class RoleController extends Controller
         return RoleResource::collection(Role::advanced_filter());
     }
 
-    public function advanced(Request $request) {
-        $users = new User;
-
-        return RoleResource::collection(Role::advanced_filter());
-    }
-
     /**
      * Store a newly created resource in storage.
      *

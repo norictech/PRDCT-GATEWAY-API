@@ -11,7 +11,6 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use GuzzleHttp\Client as Guzzle;
-use App\Helpers\Globals as GlobalHelper;
 
 class RegisterController extends Controller
 {
@@ -86,7 +85,7 @@ class RegisterController extends Controller
         $validator = $this->validator($request->all());
 
         if (empty($validator->messages()->toArray())) $validator->validate();
-        else return GlobalHelper::api_response(true, $validator->messages(), 417);
+        else return api_response(true, $validator->messages(), 417);
 
         event(new Registered($user = $this->create($request->all())));
         $user_registered = $user->save($request->all());
@@ -99,9 +98,9 @@ class RegisterController extends Controller
                 ]);
             }
 
-            return GlobalHelper::api_response(true, 'Successfully registered!', 200);
+            return api_response(true, 'Successfully registered!', 200);
         } else {
-            return GlobalHelper::api_response(false, 'Something went wrong, please try again later!', 417);
+            return api_response(false, 'Something went wrong, please try again later!', 417);
         }
     }
 }

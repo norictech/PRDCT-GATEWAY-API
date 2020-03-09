@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\OptionResource;
+use App\Option;
 use Illuminate\Http\Request;
+use App\Http\Resources\OptionResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class OptionController extends Controller
 {
@@ -14,17 +16,7 @@ class OptionController extends Controller
      */
     public function index()
     {
-        return OptionResource::collection($this->advanced_filter);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return OptionResource::collection(Option::advanced_filter());
     }
 
     /**
@@ -35,7 +27,12 @@ class OptionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $option = Option::create($request->all());
+        $option->save();
+
+        $stored_option = Option::find($option->id);
+
+        return response()->json(new OptionResource($stored_option), Response::HTTP_OK);
     }
 
     /**
@@ -46,18 +43,7 @@ class OptionController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return new OptionResource(Option::find($id));
     }
 
     /**
@@ -69,7 +55,12 @@ class OptionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $option = Option::find($id)->update($data);
+
+        $updated_option = Option::find($id);
+
+        return response()->json(new OptionResource($updated_option), Response::HTTP_OK);
     }
 
     /**
@@ -80,6 +71,13 @@ class OptionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $deleted = Option::find($id)->delete();
+        return response()->json($id);
+    }
+
+    public function mass_destroy(Request $request)
+    {
+        Option::whereIn('id', $request->all())->delete();
+        return response()->json($request->all(), Response::HTTP_OK);
     }
 }

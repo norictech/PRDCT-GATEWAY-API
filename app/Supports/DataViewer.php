@@ -36,7 +36,7 @@ trait DataViewer {
         if (!$order)
             $query = $query->orderBy('id', 'desc');
         if (!$paginate)
-            $query = $query->paginate(get_option_value('paginate'));
+            $query = $query->paginate(get_option_value('pagination_length'));
 
         return $query;
     }

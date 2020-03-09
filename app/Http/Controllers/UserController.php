@@ -20,10 +20,6 @@ class UserController extends Controller
         return UserResource::collection(User::advanced_filter());
     }
 
-    public function advanced(Request $request) {
-        return UserResource::collection(User::advanced_filter());
-    }
-
     /**
      * Store a newly created resource in storage.
      *
