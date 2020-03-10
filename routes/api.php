@@ -28,6 +28,24 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('mass_destroy', 'OptionController@mass_destroy')->name('option.destroy.mass');
     });
 
+    Route::resource('application', 'ApplicationController');
+    Route::group(['prefix' => 'application'], function () {
+        Route::post('advanced', 'ApplicationController@index')->name('application.index.advanced');
+        Route::post('mass_destroy', 'ApplicationController@mass_destroy')->name('application.destroy.mass');
+    });
+
+    Route::resource('package', 'PackageController');
+    Route::group(['prefix' => 'package'], function () {
+        Route::post('advanced', 'PackageController@index')->name('package.index.advanced');
+        Route::post('mass_destroy', 'PackageController@mass_destroy')->name('package.destroy.mass');
+    });
+
+    Route::resource('group', 'GroupController');
+    Route::group(['prefix' => 'group'], function () {
+        Route::post('advanced', 'GroupController@index')->name('group.index.advanced');
+        Route::post('mass_destroy', 'GroupController@mass_destroy')->name('group.destroy.mass');
+    });
+
     Route::resource('user', 'UserController');
     Route::group(['prefix' => 'user'], function () {
         Route::post('advanced', 'UserController@index')->name('user.index.advanced');

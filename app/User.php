@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Role;
 use App\Supports\DataViewer;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -27,7 +26,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function roles() {
-        return $this->belongsTo(Role::class);
+    public function group() {
+        return $this->belongsTo(\App\Group::class);
+    }
+
+    public function role() {
+        return $this->belongsTo(\App\Role::class);
     }
 }

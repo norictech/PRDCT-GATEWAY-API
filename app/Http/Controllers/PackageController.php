@@ -4,82 +4,50 @@ namespace App\Http\Controllers;
 
 use App\Package;
 use Illuminate\Http\Request;
+use App\Http\Resources\PackageResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class PackageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        return PackageResource::collection(Package::advanced_filter());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $package = Package::create($request->all());
+        $package->save();
+
+        $stored_package = Package::find($package->id);
+
+        return response()->json(new PackageResource($stored_package), Response::HTTP_OK);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Package  $package
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Package $package)
+    public function show($id)
     {
-        //
+        return new PackageResource(Package::find($id));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Package  $package
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Package $package)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $package = Package::find($id)->update($data);
+
+        $updated_package = Package::find($id);
+
+        return response()->json(new PackageResource($updated_package), Response::HTTP_OK);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Package  $package
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Package $package)
+    public function destroy($id)
     {
-        //
+        $deleted = Package::find($id)->delete();
+        return response()->json($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Package  $package
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Package $package)
+    public function mass_destroy(Request $request)
     {
-        //
+        Package::whereIn('id', $request->all())->delete();
+        return response()->json($request->all(), Response::HTTP_OK);
     }
 }

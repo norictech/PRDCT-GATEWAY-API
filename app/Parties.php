@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Parties extends Model
 {
     protected $table = 'parties';
-    protected $guarded = ['id'];
+    protected $fillable = ['name', 'url', 'description'];
 }

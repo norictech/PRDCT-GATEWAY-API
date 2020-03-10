@@ -11,4 +11,8 @@ class Access extends Model
 
     protected $table = 'accesses';
     protected $fillable = ['role_id', 'menu'];
+
+    public function role() {
+        return $this->belongsTo(\App\Role::class);
+    }
 }
