@@ -13,12 +13,12 @@ class CreateApplicationHasPackagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('group_has_packages', function (Blueprint $table) {
+        Schema::create('application_has_packages', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('application_id');
             $table->foreign('application_id')->references('id')->on('applications')->onDelete('cascade');
-            $table->unsignedBigInteger('packages_id');
-            $table->foreign('packages_id')->references('id')->on('packages')->onDelete('cascade');
+            $table->unsignedBigInteger('package_id');
+            $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->date('initial_date');
             $table->enum('auto_renewal', ['0', '1'])->default('0');
             $table->text('description')->nullable();
@@ -33,6 +33,6 @@ class CreateApplicationHasPackagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_has_packages');
+        Schema::dropIfExists('application_has_packages');
     }
 }

@@ -23,6 +23,8 @@ class RoleResource extends JsonResource
                 'created_at' => $this->created_at->format('D, d/m/Y H:i:s'),
                 'updated_at' => $this->updated_at->format('D, d/m/Y H:i:s')
             ],
+            'users' => UserResource::collection($this->users),
+            'accesses' => AccessResource::collection($this->accesses)
         ];
     }
 }

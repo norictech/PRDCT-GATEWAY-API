@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Role;
+use App\Http\Resources\RoleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AccessResource extends JsonResource
@@ -16,7 +18,6 @@ class AccessResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'role_id' => $this->role_id,
             'menu' => $this->menu,
             'timestamps' => [
                 'created_at' => $this->created_at->format('D, d/m/Y H:i:s'),

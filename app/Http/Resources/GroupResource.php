@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Application;
 use App\Group;
+use App\Http\Resources\ApplicationResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GroupResource extends JsonResource
@@ -23,7 +25,12 @@ class GroupResource extends JsonResource
                 'created_at' => $this->created_at->format('D, d/m/Y H:i:s'),
                 'updated_at' => $this->updated_at->format('D, d/m/Y H:i:s')
             ],
-            'parent' => new GroupResource(Group::find($this->parent_id)),
+            'users' => UserResource::collection($this->users),
+            'applications' => ApplicationResource::collection(
+                Application::join('group_has_applications', 'group_has_applications.application_id', '=', 'applications.id', 'left')
+                             ->where('group_has_applications.group_id', $this->id)
+                             ->get()
+            ),
         ];
     }
 }
