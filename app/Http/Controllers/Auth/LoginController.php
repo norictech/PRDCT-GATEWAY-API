@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Http;
 
 class LoginController extends Controller
 {
@@ -37,6 +38,24 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function login(Request $request) {
+        $client_id = \DB::table('oauth_clients')->where('secret', env('APP_SECRET'))->get()->first()->id;
+
+        $credentials = [
+            'grant_type' => 'password',
+            'client_id' => $client_id,
+            'client_secret' => env('APP_SECRET'),
+            'username' => $request->username,
+            'password' => $request->password,
+            'scope' => '*',
+        ];
+
+        $request->request->add($credentials);
+        $newRequest = Request::create('/oauth/token', 'post');
+
+        return \Route::dispatch($newRequest)->getContent();
     }
 
     // public function login(Request $request)
