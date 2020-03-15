@@ -64,7 +64,10 @@ class LoginController extends Controller
          * Store active token to oauth_tokens table
          */
         $user_id = User::where('email', $request->username)->first()->id;
-        $tokenAvailable = OauthToken::where('user_id', $user_id)->get();
+        $tokenAvailable = OauthToken::where('user_id', $user_id)
+                                      ->where('client_ip', $request->ip())
+                                      ->where('user_agent', $_SERVER['HTTP_USER_AGENT'])
+                                      ->count();
 
         $active_token_data = [
             'user_id' => $user_id,
@@ -72,9 +75,14 @@ class LoginController extends Controller
             'token' => $oauth_token->access_token,
             'refresh_token' => $oauth_token->refresh_token,
             'expires_in' => $oauth_token->expires_in,
+            'client_ip' => $request->ip(),
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
         ];
 
-        if ($tokenAvailable) OauthToken::where('user_id', $user_id)->update($active_token_data);
+        if ($tokenAvailable) OauthToken::where('user_id', $user_id)
+                                         ->where('client_ip', $request->ip())
+                                         ->where('user_agent', $_SERVER['HTTP_USER_AGENT'])
+                                         ->update($active_token_data);
         else OauthToken::create($active_token_data)->save();
 
         return response()->json($oauth_token, Response::HTTP_OK);

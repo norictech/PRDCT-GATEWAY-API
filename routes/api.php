@@ -21,6 +21,7 @@ Route::post('auth/in', 'Auth\LoginController@login')->name('user.login');
 
 Route::group(['prefix' => 'user'], function () {
     Route::post('register', 'Auth\RegisterController@register')->name('user.register');
+    Route::get('oauth/token/{id}', 'UserController@get_active_token')->name('user.get_active_token');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {

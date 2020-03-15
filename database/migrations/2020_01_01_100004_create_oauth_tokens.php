@@ -15,12 +15,13 @@ class CreateOauthTokens extends Migration
     {
         Schema::create('oauth_tokens', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->unique();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->bigInteger('user_id');
             $table->string('token_type')->default('Bearer');
             $table->text('token')->nullable();
             $table->text('refresh_token')->nullable();
             $table->string('expires_in');
+            $table->string('client_ip');
+            $table->string('user_agent');
             $table->timestamps();
         });
     }
