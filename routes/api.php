@@ -24,6 +24,8 @@ Route::group(['prefix' => 'user'], function () {
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('me', 'UserController@me');
+
     Route::resource('option', 'OptionController');
     Route::group(['prefix' => 'option'], function () {
         Route::post('advanced', 'OptionController@index')->name('option.index.advanced');

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\User;
+use App\OauthToken;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Http;
+use App\Providers\RouteServiceProvider;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -53,38 +56,27 @@ class LoginController extends Controller
         ];
 
         $request->request->add($credentials);
-        $newRequest = Request::create('/oauth/token', 'post');
+        $oauth_request = Request::create('/oauth/token', 'post');
 
-        return \Route::dispatch($newRequest)->getContent();
+        $oauth_token = json_decode(\Route::dispatch($oauth_request)->getContent());
+
+        /**
+         * Store active token to oauth_tokens table
+         */
+        $user_id = User::where('email', $request->username)->first()->id;
+        $tokenAvailable = OauthToken::where('user_id', $user_id)->get();
+
+        $active_token_data = [
+            'user_id' => $user_id,
+            'token_type' => $oauth_token->token_type,
+            'token' => $oauth_token->access_token,
+            'refresh_token' => $oauth_token->refresh_token,
+            'expires_in' => $oauth_token->expires_in,
+        ];
+
+        if ($tokenAvailable) OauthToken::where('user_id', $user_id)->update($active_token_data);
+        else OauthToken::create($active_token_data)->save();
+
+        return response()->json($oauth_token, Response::HTTP_OK);
     }
-
-    // public function login(Request $request)
-    // {
-    //     $this->validateLogin($request);
-
-    //     $parties_login = \App\Helpers\Parties::auth('POST', 'parties/login', $request->toArray(), 'form_params');
-
-    //     // If the class is using the ThrottlesLogins trait, we can automatically throttle
-    //     // the login attempts for this application. We'll key this by the username and
-    //     // the IP address of the client making these requests into this application.
-    //     if (
-    //         method_exists($this, 'hasTooManyLoginAttempts') &&
-    //         $this->hasTooManyLoginAttempts($request)
-    //     ) {
-    //         $this->fireLockoutEvent($request);
-
-    //         return $this->sendLockoutResponse($request);
-    //     }
-
-    //     if ($this->attemptLogin($request)) {
-    //         return $this->sendLoginResponse($request);
-    //     }
-
-    //     // If the login attempt was unsuccessful we will increment the number of attempts
-    //     // to login and redirect the user back to the login form. Of course, when this
-    //     // user surpasses their maximum number of attempts they will get locked out.
-    //     $this->incrementLoginAttempts($request);
-
-    //     return $this->sendFailedLoginResponse($request);
-    // }
 }

@@ -82,4 +82,8 @@ class UserController extends Controller
         User::whereIn('id', $request->all())->delete();
         return response()->json($request->all(), Response::HTTP_OK);
     }
+
+    public function me(Request $request) {
+        return new UserResource($request->user());
+    }
 }
