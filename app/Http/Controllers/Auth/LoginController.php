@@ -6,6 +6,7 @@ use App\User;
 use App\OauthToken;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Http;
 use App\Providers\RouteServiceProvider;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,6 +86,7 @@ class LoginController extends Controller
                                          ->update($active_token_data);
         else OauthToken::create($active_token_data)->save();
 
+        $oauth_token->user = new UserResource(User::find($user_id));
         return response()->json($oauth_token, Response::HTTP_OK);
     }
 }
