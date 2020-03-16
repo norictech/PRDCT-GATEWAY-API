@@ -86,7 +86,7 @@ class LoginController extends Controller
                                          ->update($active_token_data);
         else OauthToken::create($active_token_data)->save();
 
-        $oauth_token->user = new UserResource(User::find($user_id));
+        $oauth_token->user_id = $user_id;
         return response()->json($oauth_token, Response::HTTP_OK);
     }
 }
