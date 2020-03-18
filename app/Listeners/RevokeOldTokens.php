@@ -44,20 +44,9 @@ class RevokeOldTokens
                             ->each(function ($row) {
                                 $row->delete();
                             });
-
-            DB::table('oauth_access_tokens')
-                ->where('id', $event->tokenId)
-                ->where('user_id', $event->userId)
-                ->where('client_id', $event->clientId)
-                ->latest()
-                    ->take(
-                        DB::table('oauth_access_tokens')
-                        ->where('user_id', $event->userId)
-                        ->count()
-                    )
-                    ->skip(
-                        get_max_token_each_user()
-                    )->delete();
         }
+
+        DB::table('oauth_access_tokens')->where('revoked', 1)->delete();
+        DB::table('oauth_refresh_tokens')->where('revoked', 1)->delete();
     }
 }
