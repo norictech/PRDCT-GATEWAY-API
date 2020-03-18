@@ -73,8 +73,8 @@ class LoginController extends Controller
         $active_token_data = [
             'user_id' => $user_id,
             'token_type' => $oauth_token->token_type,
-            'token' => $oauth_token->access_token,
-            'refresh_token' => $oauth_token->refresh_token,
+            'token' => \Hash::make($oauth_token->access_token),
+            'refresh_token' => \Hash::make($oauth_token->refresh_token),
             'expires_in' => $oauth_token->expires_in,
             'client_ip' => $request->ip(),
             'user_agent' => $_SERVER['HTTP_USER_AGENT'],
