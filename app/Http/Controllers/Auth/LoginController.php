@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use App\OauthToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Http;
 use App\Providers\RouteServiceProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Supports\TokenEncryptor;
 
 class LoginController extends Controller
 {
@@ -45,7 +47,8 @@ class LoginController extends Controller
     }
 
     public function login(Request $request) {
-        $client_id = \DB::table('oauth_clients')->where('secret', env('APP_SECRET'))->get()->first()->id;
+        $token_encryptor = new TokenEncryptor();
+        $client_id = DB::table('oauth_clients')->where('secret', env('APP_SECRET'))->get()->first()->id;
 
         $credentials = [
             'grant_type' => 'password',
@@ -73,8 +76,8 @@ class LoginController extends Controller
         $active_token_data = [
             'user_id' => $user_id,
             'token_type' => $oauth_token->token_type,
-            'token' => \Hash::make($oauth_token->access_token),
-            'refresh_token' => \Hash::make($oauth_token->refresh_token),
+            'token' => $token_encryptor->secure_token($oauth_token->access_token, 'nonce_value'),
+            'refresh_token' => $token_encryptor->secure_token($oauth_token->refresh_token, 'nonce_value'),
             'expires_in' => $oauth_token->expires_in,
             'client_ip' => $request->ip(),
             'user_agent' => $_SERVER['HTTP_USER_AGENT'],
@@ -87,6 +90,7 @@ class LoginController extends Controller
         else OauthToken::create($active_token_data)->save();
 
         $oauth_token->user_id = $user_id;
+
         return response()->json($oauth_token, Response::HTTP_OK);
     }
 }
