@@ -64,6 +64,10 @@ class LoginController extends Controller
 
         $oauth_token = json_decode(\Route::dispatch($oauth_request)->getContent());
 
+        // format oauth_token data
+        $oauth_token->access_token = $token_encryptor->secure_token($oauth_token->access_token, nonce($request));
+        $oauth_token->refresh_token = $token_encryptor->secure_token($oauth_token->refresh_token, nonce($request));
+
         /**
          * Store active token to oauth_tokens table
          */
@@ -73,12 +77,11 @@ class LoginController extends Controller
                                       ->where('user_agent', $_SERVER['HTTP_USER_AGENT'])
                                       ->count();
 
-        $nonce_value = $request->ip() . $_SERVER['HTTP_USER_AGENT']; // key for token encryption
         $active_token_data = [
             'user_id' => $user_id,
             'token_type' => $oauth_token->token_type,
-            'token' => $token_encryptor->secure_token($oauth_token->access_token, $nonce_value),
-            'refresh_token' => $token_encryptor->secure_token($oauth_token->refresh_token, $nonce_value),
+            'token' => $oauth_token->access_token,
+            'refresh_token' => $oauth_token->refresh_token,
             'expires_in' => $oauth_token->expires_in,
             'client_ip' => $request->ip(),
             'user_agent' => $_SERVER['HTTP_USER_AGENT'],

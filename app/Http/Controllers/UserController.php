@@ -87,10 +87,4 @@ class UserController extends Controller
     public function me(Request $request) {
         return new UserResource($request->user());
     }
-
-    public function get_active_token($id) {
-        $token_data = OauthToken::where('user_id', $id)->get();
-
-        return response()->json($token_data);
-    }
 }
