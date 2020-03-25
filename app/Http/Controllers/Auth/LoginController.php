@@ -65,8 +65,8 @@ class LoginController extends Controller
         $oauth_token = json_decode(\Route::dispatch($oauth_request)->getContent());
 
         // format oauth_token data
-        $oauth_token->access_token = $token_encryptor->secure_token($oauth_token->access_token, nonce($request));
-        $oauth_token->refresh_token = $token_encryptor->secure_token($oauth_token->refresh_token, nonce($request));
+        // $oauth_token->access_token = $token_encryptor->secure_token($oauth_token->access_token, nonce($request));
+        // $oauth_token->refresh_token = $token_encryptor->secure_token($oauth_token->refresh_token, nonce($request));
 
         /**
          * Store active token to oauth_tokens table

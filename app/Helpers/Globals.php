@@ -39,5 +39,6 @@ function throw_error($message = '') {
 }
 
 function nonce($request) {
-    return $request->ip() . $_SERVER['HTTP_USER_AGENT'];
+    // return $request->ip() . $_SERVER['HTTP_USER_AGENT'];
+    return 'test';
 }
