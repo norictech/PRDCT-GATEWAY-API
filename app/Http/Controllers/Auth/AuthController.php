@@ -68,7 +68,7 @@ class AuthController extends Controller
     {
         try {
             $token = OauthToken::select('token', 'refresh_token', 'expires_in', 'refresh_token_expires_in', 'updated_at')
-                ->where('token', $request->refresh_token)
+                ->where('refresh_token', $request->refresh_token)
                 ->where('token_type', 'Bearer')
                 ->where('client_ip', $request->ip())
                 ->where('user_agent', $_SERVER['HTTP_USER_AGENT'])
