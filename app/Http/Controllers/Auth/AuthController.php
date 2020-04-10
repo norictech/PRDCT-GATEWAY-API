@@ -63,4 +63,32 @@ class AuthController extends Controller
             ], Response::HTTP_OK);
         }
     }
+
+    public function refreshTokenLifetimeCheck(Request $request)
+    {
+        try {
+            $token = OauthToken::select('token', 'refresh_token', 'expires_in', 'refresh_token_expires_in', 'updated_at')
+                ->where('token', $request->refresh_token)
+                ->where('token_type', 'Bearer')
+                ->where('client_ip', $request->ip())
+                ->where('user_agent', $_SERVER['HTTP_USER_AGENT'])
+                ->first();
+        } catch (\Throwable $th) {
+            throw_error($th);
+        }
+
+        $refresh_token_expire_time = Carbon::parse($token->updated_at)->addSecond($token->refresh_token_expires_in)->format('Y-m-d H:i:s');
+        $is_refresh_token_expired = current_time() > $refresh_token_expire_time;
+
+        if (!$is_refresh_token_expired) {
+            return response()->json([
+                'error' => false,
+            ], Response::HTTP_OK);
+        } else {
+            return response()->json([
+                'error' => true,
+                'message' => 'Token Expired'
+            ], Response::HTTP_OK);
+        }
+    }
 }

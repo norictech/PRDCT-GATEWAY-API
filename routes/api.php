@@ -11,6 +11,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('in', 'Auth\LoginController@login')->name('auth.login');
     Route::get('token/{id}', 'Auth\AuthController@token')->name('auth.token');
     Route::post('token_lifetime_check', 'Auth\AuthController@tokenLifetimeCheck')->name('auth.token.lifetime_check');
+    Route::post('refresh_token_lifetime_check', 'Auth\AuthController@refrsehTokenLifetimeCheck')->name('auth.refresh_token.lifetime_check');
 });
 
 // prefix: user
