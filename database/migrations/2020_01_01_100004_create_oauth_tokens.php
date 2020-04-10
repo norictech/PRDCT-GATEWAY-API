@@ -20,6 +20,7 @@ class CreateOauthTokens extends Migration
             $table->text('token')->nullable();
             $table->text('refresh_token')->nullable();
             $table->string('expires_in');
+            $table->string('refresh_token_expires_in');
             $table->string('client_ip');
             $table->string('user_agent');
             $table->timestamps();

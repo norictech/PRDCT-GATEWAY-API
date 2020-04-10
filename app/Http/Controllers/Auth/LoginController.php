@@ -81,8 +81,9 @@ class LoginController extends Controller
             'user_id' => $user_id,
             'token_type' => $oauth_token->token_type,
             'token' => $oauth_token->access_token,
-            'refresh_token' => $oauth_token->refresh_token,
             'expires_in' => $oauth_token->expires_in,
+            'refresh_token' => $oauth_token->refresh_token,
+            'refresh_token_expires_in' => env('PERSONAL_REFRESH_TOKEN_LIFETIME') * 86400,
             'client_ip' => $request->ip(),
             'user_agent' => $_SERVER['HTTP_USER_AGENT'],
         ];
